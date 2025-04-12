@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+    <title>Perhitungan Diskon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Perhitungan Diskon</h1>
+        <input type="text" id="harga" placeholder="Harga awal" oninput="formatRibuan(this)">
+        <input type="number" id="diskon" placeholder="Diskon (%)" oninput="formatRibuanDiskon(this)" min="0" max="100">
+        <button onclick="hitungDiskon()">Hitung Diskon</button>
+        <button class="reset" onclick="reset()">Reset</button>
+        <p id="peringatan">Diskon tidak bisa lebih dari 100%</p>
+        <h2>Diskon: <span id="persentase_diskon">0%</span></h2>
+        <h2>Nilai Diskon: <span id="nilai_diskon">Rp 0,00</span></h2>
+        <h2>Total Setelah Diskon: <span id="total_harga">Rp 0,00</span></h2>
+    </div>  
+    <script>
+        function formatRibuan(input) {
+            let value = input.value.replace(/\D/g, "");
+            if (value) {
+                input.value = new Intl.NumberFormat("id-ID").format(value);
+            }   
+        }
+
+        function formatRibuanDiskon(input) {
+            let value = parseFloat(input.value);
+            if (value > 100) {
+                input.value = 100;
+                document.getElementById("peringatan").style.display = "block";
+            }
+        }
+
+        function hitungDiskon() { 
+            let hargaRaw = document.getElementById("harga").value.replace(/\./g, "").replace(/,/g, "");
+            let harga = parseInt(hargaRaw);
+            let diskon = parseFloat(document.getElementById("diskon").value);
+
+            if (!isNaN(harga) && !isNaN(diskon) && diskon <= 100) {
+                document.getElementById("peringatan").style.display = "none";
+                let nilaiDiskon = harga * (diskon / 100);
+                let totalHarga = harga - nilaiDiskon;
+                document.getElementById("nilai_diskon").textContent = "Rp " + new Intl.NumberFormat("id-ID").format(nilaiDiskon) + ",00";
+                document.getElementById("total_harga").textContent = "Rp " + new Intl.NumberFormat("id-ID").format(totalHarga) + ",00";
+                document.getElementById("persentase_diskon").textContent = diskon + "%";
+            }
+        }
+        function reset() {
+            document.getElementById("harga").value = "";
+            document.getElementById("diskon").value = "";
+            document.getElementById("nilai_diskon").textContent = "Rp 0,00";
+            document.getElementById("total_harga").textContent = "Rp 0,00";
+            document.getElementById("persentase_diskon").textContent = "0%";
+            document.getElementById("peringatan").style.display = "none";
+        }
+    </script>
+</body>
+</html>
